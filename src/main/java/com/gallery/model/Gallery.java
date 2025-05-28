@@ -1,5 +1,4 @@
 package com.gallery.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 

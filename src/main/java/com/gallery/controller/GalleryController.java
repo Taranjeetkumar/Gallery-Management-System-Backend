@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.UUID;
 import java.util.List;
 
 @RestController
@@ -24,7 +24,7 @@ public class GalleryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public GalleryResponse getGalleryById(@PathVariable Long id) {
+    public GalleryResponse getGalleryById(@PathVariable UUID id) {
         return galleryService.getGalleryById(id);
     }
 
@@ -36,13 +36,13 @@ public class GalleryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public GalleryResponse updateGallery(@PathVariable Long id, @Valid @RequestBody GalleryRequest request) {
+    public GalleryResponse updateGallery(@PathVariable UUID id, @Valid @RequestBody GalleryRequest request) {
         return galleryService.updateGallery(id, request);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteGallery(@PathVariable Long id) {
+    public void deleteGallery(@PathVariable UUID id) {
         galleryService.deleteGallery(id);
     }
 }

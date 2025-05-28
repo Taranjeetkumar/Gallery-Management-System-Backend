@@ -47,6 +47,7 @@ public class AuthService {
             .orElseThrow(() -> new RuntimeException("User role not found. Seed roles in DB!"));
         User user = new User();
         user.setUsername(signUpRequest.getUsername());
+        user.setFullname(signUpRequest.getFullname());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setRoles(Collections.singleton(userRole));

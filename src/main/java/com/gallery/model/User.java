@@ -4,18 +4,23 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.Set;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "user_name"),
         @UniqueConstraint(columnNames = "email")
 })
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, length = 50)
+    @Id
+    @GeneratedValue
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "UUID")
+    private UUID id;
+    @Column(name = "user_name",nullable = false, length = 50)
     private String username;
+    @Column(name = "full_name",nullable = false, length = 50)
+    private String fullname;
     @Column(nullable = false, length = 100)
     private String email;
     @Column(nullable = false)
