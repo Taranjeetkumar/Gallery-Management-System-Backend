@@ -43,8 +43,11 @@ public class AuthService {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email is already in use!");
         }
-        Role userRole = roleRepository.findByName(Role.ERole.ROLE_USER)
-            .orElseThrow(() -> new RuntimeException("User role not found. Seed roles in DB!"));
+         // Look up role from payload
+        String requestedRole = signUpRequest.getRole(); // e.g., "ROLE_GALLERY_MANAGER"
+        Role userRole = roleRepository.findByName(Role.ERole.valueOf(requestedRole))
+        .orElseThrow(() -> new RuntimeException("Role not found in DB: " + requestedRole));
+
         User user = new User();
         user.setUsername(signUpRequest.getUsername());
         user.setFullname(signUpRequest.getFullname());
@@ -57,10 +60,10 @@ public class AuthService {
     @Transactional
     public AuthResponse authenticateUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userRepository.findByUsername(loginRequest.getUsername())
+        User user = userRepository.findByUsername(loginRequest.getEmail())
             .orElseThrow(() -> new RuntimeException("No such user!"));
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<String> roles = user.getRoles().stream()
@@ -69,4 +72,24 @@ public class AuthService {
         String token = jwtTokenProvider.createToken(userDetails, roles);
         return new AuthResponse(token, user.getUsername(), roles);
     }
+
+    @Transactional
+    public AuthResponse getCurrentUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()
+            || authentication.getPrincipal().equals("anonymousUser")) {
+        throw new RuntimeException("Unauthorized access"); // Avoid using ResponseEntity in service
+    }
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    String username = userDetails.getUsername(); // use getUsername(), not getEmail()
+    User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("No such user!"));
+
+    List<String> roles = user.getRoles().stream()
+            .map(role -> role.getName().name())
+            .toList();
+
+    return new AuthResponse(null, username, roles);
+}
+    
 }

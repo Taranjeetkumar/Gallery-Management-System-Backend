@@ -25,4 +25,11 @@ public class AuthController {
         AuthResponse response = authService.authenticateUser(loginRequest);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> getCurrentUser() {
+        AuthResponse response = authService.getCurrentUser();
+        return ResponseEntity.ok(response);    
+}
+
 }
