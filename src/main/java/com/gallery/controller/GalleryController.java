@@ -7,11 +7,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/galleries")
+@CrossOrigin(origins = "*")
 public class GalleryController {
     @Autowired
     private GalleryService galleryService;
@@ -24,25 +24,25 @@ public class GalleryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public GalleryResponse getGalleryById(@PathVariable UUID id) {
+    public GalleryResponse getGalleryById(@PathVariable Long id) {
         return galleryService.getGalleryById(id);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public GalleryResponse createGallery(@Valid @RequestBody GalleryRequest request) {
         return galleryService.createGallery(request);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public GalleryResponse updateGallery(@PathVariable UUID id, @Valid @RequestBody GalleryRequest request) {
+    public GalleryResponse updateGallery(@PathVariable Long id, @Valid @RequestBody GalleryRequest request) {
         return galleryService.updateGallery(id, request);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteGallery(@PathVariable UUID id) {
+    public void deleteGallery(@PathVariable Long id) {
         galleryService.deleteGallery(id);
     }
 }

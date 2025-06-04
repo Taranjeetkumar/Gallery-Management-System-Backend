@@ -27,6 +27,11 @@ public class JwtTokenProvider {
     protected void init() {
         key = Keys.hmacShaKeyFor(Base64.getEncoder().encode(secretKey.getBytes()));
     }
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
     public String createToken(UserDetails userDetails, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
         claims.put("roles", roles);
@@ -39,6 +44,17 @@ public class JwtTokenProvider {
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
     }
+
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
     public String getUsernameFromJWT(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build()
             .parseClaimsJws(token).getBody().getSubject();

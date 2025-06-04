@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +33,7 @@ public class GalleryService {
     /**
      * Get a gallery by its ID. Accessible by USER and ADMIN.
      */
-    public GalleryResponse getGalleryById(UUID id) {
+    public GalleryResponse getGalleryById(Long id) {
         Gallery gallery = galleryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gallery not found"));
         return toResponse(gallery);
@@ -59,7 +59,7 @@ public class GalleryService {
     /**
      * Update an existing gallery. Accessible by ADMIN only.
      */
-    public GalleryResponse updateGallery(UUID id, GalleryRequest request) {
+    public GalleryResponse updateGallery(Long id, GalleryRequest request) {
         Gallery gallery = galleryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gallery not found"));
         gallery.setTitle(request.getTitle());
@@ -72,7 +72,7 @@ public class GalleryService {
     /**
      * Delete a gallery. Accessible by ADMIN only.
      */
-    public void deleteGallery(UUID id) {
+    public void deleteGallery(Long id) {
         Gallery gallery = galleryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gallery not found"));
         galleryRepository.delete(gallery);

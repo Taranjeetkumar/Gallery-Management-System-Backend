@@ -90,6 +90,63 @@ public class AuthService {
             .toList();
 
     return new AuthResponse(null, username, roles);
-}
+    }
     
+
+    public AuthResponse refreshToken(String refreshToken) {
+        // For now, just validate the current token and issue a new one
+        // In a real implementation, you'd have a separate refresh token mechanism
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+
+        String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+
+        // List<String> roles = Collections.singletonList(user.getRole());
+
+          List<String> roles = user.getRoles().stream()
+            .map(role -> role.getName().name())
+            .toList();
+
+        String newToken = jwtTokenProvider.createToken(
+            org.springframework.security.core.userdetails.User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getRoles().stream()
+            .map(role -> role.getName().name())
+            .toString())
+                .build(),
+            roles
+        );
+
+        return new AuthResponse(newToken, user.getUsername(), roles);
+
+    }
+
+    public void changePassword(String currentPassword, String newPassword) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public boolean validateToken(String token) {
+        return jwtTokenProvider.validateToken(token);
+    }
+
 }
