@@ -70,8 +70,20 @@ public class AuthService {
                 .map(role -> role.getName().name())
                 .collect(Collectors.toList());
         String token = jwtTokenProvider.createToken(userDetails, roles);
-        return new AuthResponse(token, user.getUsername(), roles);
-    }
+
+        return new AuthResponse(
+        token,
+        user.getUsername(),
+        roles,
+        user.getId(),
+        user.getEmail(),
+        user.getFullname(),
+        user.getAvatar(),
+        user.getIsActive(),
+        user.getCreatedAt(),
+        user.getUpdatedAt()
+    );   
+ }
 
     @Transactional
     public AuthResponse getCurrentUser() {
@@ -89,8 +101,18 @@ public class AuthService {
             .map(role -> role.getName().name())
             .toList();
 
-    return new AuthResponse(null, username, roles);
-    }
+return new AuthResponse(
+        null,
+        user.getUsername(),
+        roles,
+        user.getId(),
+        user.getEmail(),
+        user.getFullname(),
+        user.getAvatar(),
+        user.getIsActive(),
+        user.getCreatedAt(),
+        user.getUpdatedAt()
+    );     }
     
 
     public AuthResponse refreshToken(String refreshToken) {
@@ -121,7 +143,20 @@ public class AuthService {
             roles
         );
 
-        return new AuthResponse(newToken, user.getUsername(), roles);
+
+return new AuthResponse(
+        newToken,
+        user.getUsername(),
+        roles,
+        user.getId(),
+        user.getEmail(),
+        user.getFullname(),
+        user.getAvatar(),
+        user.getIsActive(),
+        user.getCreatedAt(),
+        user.getUpdatedAt()
+    ); 
+
 
     }
 
@@ -149,4 +184,6 @@ public class AuthService {
         return jwtTokenProvider.validateToken(token);
     }
 
+
+   
 }

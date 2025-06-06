@@ -16,22 +16,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeHttpRequests()
+        http
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> {}) // Enable with default config
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/files/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/galleries/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/galleries", "/api/galleries/*").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/artworks/**").hasAnyRole("ADMIN","GALLERY_MANAGER","USER","ARTIST")
+                .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().authenticated().and()
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class));
+
         return http.build();
     }
 

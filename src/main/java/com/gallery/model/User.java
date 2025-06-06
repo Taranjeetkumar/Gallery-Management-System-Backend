@@ -29,6 +29,27 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "avatar_url")
+    private String avatar;
+
+    @Column(name = "birthplace")
+    private String birthplace;
+
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "artistic_style")
+    private String artisticStyle;
+
+    @Column(name = "specialization_art_type")
+    private String specializationArtType;
+
+    @Column(name = "specialization_style")
+    private String specializationStyle;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -39,6 +60,9 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Gallery> galleries;
+
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Artwork> artworks;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -57,7 +81,7 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-     public Role getRole() {
-         return roles.stream().findFirst().orElse(null);
-     }
+    public Role getRole() {
+        return roles.stream().findFirst().orElse(null);
+    }
 }
