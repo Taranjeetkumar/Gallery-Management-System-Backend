@@ -12,6 +12,9 @@ public class UserProfileResponse {
     private String email;
     private String avatar;
     private String birthplace;
+        private String phone;
+            private String address;
+    private String bio;
     private Integer age;
     private String artisticStyle;
     private Set<String> roles;

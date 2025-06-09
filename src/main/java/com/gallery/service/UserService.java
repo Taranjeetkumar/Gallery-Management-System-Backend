@@ -31,6 +31,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + email));
         // Update fields if provided
         if (request.getFullname() != null) user.setFullname(request.getFullname());
+        if (request.getPhone() != null) user.setPhone(request.getPhone());
+        if (request.getAddress() != null) user.setAddress(request.getAddress());
+        if (request.getBio() != null) user.setBio(request.getBio());
         if (request.getAvatar() != null) user.setAvatar(request.getAvatar());
         if (request.getBirthplace() != null) user.setBirthplace(request.getBirthplace());
         if (request.getAge() != null) user.setAge(request.getAge());
@@ -42,6 +45,9 @@ public class UserService {
         response.setUsername(updated.getUsername());
         response.setFullname(updated.getFullname());
         response.setEmail(updated.getEmail());
+        response.setPhone(updated.getPhone());
+        response.setAddress(updated.getAddress());
+        response.setBio(updated.getBio());
         response.setAvatar(updated.getAvatar());
         response.setBirthplace(updated.getBirthplace());
         response.setAge(updated.getAge());

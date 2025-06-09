@@ -26,6 +26,15 @@ public class User {
     @Column(nullable = false, length = 100)
     private String email;
 
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "bio")
+    private String bio;
+
     @Column(nullable = false)
     private String password;
 

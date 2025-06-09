@@ -25,6 +25,8 @@ public class GalleryService {
      * Get all galleries. Accessible by USER and ADMIN.
      */
     public List<GalleryResponse> getAllGalleries() {
+
+        System.out.println("fgefytfytrty");
         return galleryRepository.findAll().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());

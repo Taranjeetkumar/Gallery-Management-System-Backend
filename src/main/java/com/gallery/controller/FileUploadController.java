@@ -11,16 +11,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/api/upload")
 @CrossOrigin(origins = "*")
 public class FileUploadController {
 
     @Autowired
     private S3Service s3Service;
 
-    @PostMapping("/upload")
+    @PostMapping
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
+            System.out.println("gfygy "+file);
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("File is empty");
             }

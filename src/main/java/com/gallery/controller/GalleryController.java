@@ -16,7 +16,7 @@ public class GalleryController {
     @Autowired
     private GalleryService galleryService;
 
-    @GetMapping
+    @GetMapping("/")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<GalleryResponse> getAllGalleries() {
         return galleryService.getAllGalleries();
@@ -28,7 +28,7 @@ public class GalleryController {
         return galleryService.getGalleryById(id);
     }
 
-    @PostMapping
+    @PostMapping("/")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public GalleryResponse createGallery(@Valid @RequestBody GalleryRequest request) {
         return galleryService.createGallery(request);
