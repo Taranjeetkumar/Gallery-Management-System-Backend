@@ -30,7 +30,7 @@ public class Artwork {
 
     @NotNull(message = "Gallery is required")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gallery_id", nullable = false)
+    @JoinColumn(name = "gallery_id")
     private Gallery gallery;
 
     @Column(name = "image_url", nullable = false)

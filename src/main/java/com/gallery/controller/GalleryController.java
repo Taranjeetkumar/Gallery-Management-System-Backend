@@ -10,16 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/galleries")
+@RequestMapping("/api/gallery")
 @CrossOrigin(origins = "*")
 public class GalleryController {
     @Autowired
     private GalleryService galleryService;
 
-    @GetMapping("/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public List<GalleryResponse> getAllGalleries() {
-        return galleryService.getAllGalleries();
+   @GetMapping
+   @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','USER','ARTIST')")
+    public List<GalleryResponse> getAllGalleries(
+         @RequestParam(value = "artistId", required = false) Long artistId,
+        @RequestParam(value = "galleryId", required = false) Long galleryId) {
+
+                    System.out.println("hffdfc ffd  "+artistId);
+
+        return galleryService.getAllGalleries(artistId, galleryId);
     }
 
     @GetMapping("/{id}")
@@ -28,9 +33,11 @@ public class GalleryController {
         return galleryService.getGalleryById(id);
     }
 
-    @PostMapping("/")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public GalleryResponse createGallery(@Valid @RequestBody GalleryRequest request) {
+
+        System.out.println("dfsggsdf  "+request);
         return galleryService.createGallery(request);
     }
 

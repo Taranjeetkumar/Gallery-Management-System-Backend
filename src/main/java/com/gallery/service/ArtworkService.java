@@ -30,11 +30,26 @@ public class ArtworkService {
     @Autowired
     private GalleryRepository galleryRepository;
 
-    public List<ArtworkResponse> getAllArtworks() {
-        return artworkRepository.findAll().stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+    public List<ArtworkResponse> getAllArtworks(Long artistId, Long galleryId) {
+
+        List<Artwork> artworks;
+
+    if (artistId != null && galleryId != null) {
+        artworks = artworkRepository.findByArtistIdAndGalleryId(artistId, galleryId);
+    } else if (artistId != null) {
+        artworks = artworkRepository.findByArtistId(artistId);
+    } else if (galleryId != null) {
+        artworks = artworkRepository.findByGalleryId(galleryId);
+    } else {
+        artworks = artworkRepository.findAll();
     }
+
+    return artworks.stream()
+            .map(this::mapToResponse)
+            .collect(Collectors.toList());
+
+    }
+    
 
     public ArtworkResponse getArtworkById(Long id) {
         Artwork artwork = artworkRepository.findById(id)
@@ -47,14 +62,20 @@ public class ArtworkService {
         String username = ((UserDetails) auth.getPrincipal()).getUsername();
         User artist = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        Gallery gallery = galleryRepository.findById(request.getGalleryId())
-                .orElseThrow(() -> new RuntimeException("Gallery not found with id: " + request.getGalleryId()));
-
+       
         Artwork artwork = new Artwork();
         artwork.setTitle(request.getTitle());
         artwork.setDescription(request.getDescription());
         artwork.setArtist(artist);
-        artwork.setGallery(gallery);
+
+                        System.out.println("sdfghfsd  dsdds "+request.getGalleryId());
+
+        if(request.getGalleryId() > 0){
+            Gallery gallery = galleryRepository.findById(request.getGalleryId())
+                .orElseThrow(() -> new RuntimeException("Gallery not found with id: " + request.getGalleryId()));
+            artwork.setGallery(gallery);
+        }
+         
         artwork.setImageUrl(request.getImageUrl());
         artwork.setThumbnailUrl(request.getThumbnailUrl());
         artwork.setMedium(request.getMedium());
@@ -70,11 +91,14 @@ public class ArtworkService {
     }
 
     public ArtworkResponse updateArtwork(Long id, ArtworkRequest request) {
+
+                                System.out.println("gherdg. "+id);
+
         Artwork artwork = artworkRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Artwork not found with id: " + id));
         if (request.getTitle() != null) artwork.setTitle(request.getTitle());
         if (request.getDescription() != null) artwork.setDescription(request.getDescription());
-        if (request.getGalleryId() != null) {
+        if (request.getGalleryId() > 0) {
             Gallery gallery = galleryRepository.findById(request.getGalleryId())
                     .orElseThrow(() -> new RuntimeException("Gallery not found with id: " + request.getGalleryId()));
             artwork.setGallery(gallery);
@@ -104,8 +128,13 @@ public class ArtworkService {
         response.setId(artwork.getId());
         response.setTitle(artwork.getTitle());
         response.setDescription(artwork.getDescription());
+        if (artwork.getGallery() != null) {
         response.setGalleryId(artwork.getGallery().getId());
+    }
+
+    if (artwork.getArtist() != null) {
         response.setArtistId(artwork.getArtist().getId());
+    }
         response.setImageUrl(artwork.getImageUrl());
         response.setThumbnailUrl(artwork.getThumbnailUrl());
         response.setMedium(artwork.getMedium());

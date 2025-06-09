@@ -24,13 +24,26 @@ public class GalleryService {
     /**
      * Get all galleries. Accessible by USER and ADMIN.
      */
-    public List<GalleryResponse> getAllGalleries() {
+    public List<GalleryResponse> getAllGalleries(Long artistId, Long galleryId) {
+    List<Gallery> galleries;
 
-        System.out.println("fgefytfytrty");
-        return galleryRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+    if (artistId != null && galleryId != null) {
+        galleries = galleryRepository.findByOwnerIdAndId(artistId, galleryId);
+    } else if (artistId != null) {
+        galleries = galleryRepository.findByOwner_Id(artistId);
+    } else if (galleryId != null) {
+        galleries = galleryRepository.findById(galleryId)
+                .map(List::of)
+                .orElse(List.of());
+    } else {
+        galleries = galleryRepository.findAll();
     }
+
+    return galleries.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList());
+}
+
 
     /**
      * Get a gallery by its ID. Accessible by USER and ADMIN.
