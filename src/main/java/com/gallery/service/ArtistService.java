@@ -9,6 +9,8 @@ import com.gallery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.gallery.dto.SocialMediaDTO;
+import com.gallery.model.SocialMedia;
 
 import java.util.List;
 import java.util.Set;
@@ -52,12 +54,21 @@ public class ArtistService {
         artist.setUsername(request.getUsername());
         artist.setFullname(request.getFullname());
         artist.setEmail(request.getEmail());
+        artist.setPhone(request.getPhone());
         artist.setPassword(passwordEncoder.encode(request.getPassword()));
         artist.setAvatar(request.getAvatar());
         artist.setBirthplace(request.getBirthplace());
         artist.setAge(request.getAge());
         artist.setArtisticStyle(request.getArtisticStyle());
         artist.setRoles(Set.of(artistRole));
+
+        SocialMedia sm = new SocialMedia();
+        sm.setInstagram(request.getSocialMedia().getInstagram());
+        sm.setFacebook(request.getSocialMedia().getFacebook());
+        sm.setWebsite(request.getSocialMedia().getWebsite());
+        sm.setTwitter(request.getSocialMedia().getTwitter());
+        artist.setSocialMedia(sm);
+
         User saved = userRepository.save(artist);
         return mapToResponse(saved);
     }

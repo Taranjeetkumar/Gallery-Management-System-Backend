@@ -10,13 +10,10 @@ public class Gallery {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(length = 500)
     private String description;
 
-    @Column(nullable = false)
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,4 +36,24 @@ public class Gallery {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    private String name;
+    private String address;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+    private String phone;
+    private String email;
+
+
+    private String website;
+
+    @Embedded
+    private OpeningHours openingHours;
+
+    @Embedded
+    @AttributeOverrides({
+    @AttributeOverride(name = "website", column = @Column(name = "contact_website"))})
+    private SocialMedia socialMedia;
 }

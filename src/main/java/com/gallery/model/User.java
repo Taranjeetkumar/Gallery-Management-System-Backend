@@ -58,6 +58,9 @@ public class User {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+    
+    @Embedded
+    private SocialMedia socialMedia;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

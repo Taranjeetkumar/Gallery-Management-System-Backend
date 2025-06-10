@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/gallery")
@@ -19,12 +20,15 @@ public class GalleryController {
    @GetMapping
    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','USER','ARTIST')")
     public List<GalleryResponse> getAllGalleries(
-         @RequestParam(value = "artistId", required = false) Long artistId,
-        @RequestParam(value = "galleryId", required = false) Long galleryId) {
+        @RequestParam(value = "artistId", required = false) Long artistId,
+        @RequestParam(value = "galleryId", required = false) Long galleryId,
+        @RequestParam(value = "filters", required = false) Map<String, String> filters,
+        @RequestParam(value = "page", defaultValue = "1") int page,
+        @RequestParam(value = "limit", defaultValue = "12") int limit ){
+        
+        System.out.println("hffdfc ffd  "+filters);
 
-                    System.out.println("hffdfc ffd  "+artistId);
-
-        return galleryService.getAllGalleries(artistId, galleryId);
+        return galleryService.getAllGalleries(filters,artistId, galleryId,page,limit);
     }
 
     @GetMapping("/{id}")
@@ -34,7 +38,7 @@ public class GalleryController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER')")
     public GalleryResponse createGallery(@Valid @RequestBody GalleryRequest request) {
 
         System.out.println("dfsggsdf  "+request);
@@ -42,14 +46,15 @@ public class GalleryController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER')")
     public GalleryResponse updateGallery(@PathVariable Long id, @Valid @RequestBody GalleryRequest request) {
         return galleryService.updateGallery(id, request);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER')")
     public void deleteGallery(@PathVariable Long id) {
-        galleryService.deleteGallery(id);
+                System.out.println("lhghjfjvfjv ::  "+id);
+         galleryService.deleteGallery(id);
     }
 }

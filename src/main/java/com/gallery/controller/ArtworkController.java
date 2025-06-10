@@ -18,19 +18,13 @@ public class ArtworkController {
     @Autowired
     private ArtworkService artworkService;
 
-    // @GetMapping
-    // @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','USER','ARTIST')")
-    // public List<ArtworkResponse> getAllArtworks() {
-    //     return artworkService.getAllArtworks();
-    // }
-
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','USER','ARTIST')")
     public List<ArtworkResponse> getAllArtworks(
         @RequestParam(value = "artistId", required = false) Long artistId,
         @RequestParam(value = "galleryId", required = false) Long galleryId) {
-    return artworkService.getAllArtworks(artistId, galleryId);
-}
+        return artworkService.getAllArtworks(artistId, galleryId);
+   }
 
 
     @GetMapping("/{id}")
@@ -42,22 +36,17 @@ public class ArtworkController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','ARTIST')")
     public ArtworkResponse createArtwork(@Valid @RequestBody ArtworkRequest request) {
-
-                System.out.println("dfsggsdf  dsdds "+request);
-
         return artworkService.createArtwork(request);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','ARTIST')")
     public ArtworkResponse updateArtwork(@PathVariable Long id, @Valid @RequestBody ArtworkRequest request) {
-                        System.out.println("fgxfxfgg. "+request);
-
         return artworkService.updateArtwork(id, request);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','ARTIST')")
     public void deleteArtwork(@PathVariable Long id) {
         artworkService.deleteArtwork(id);
     }
