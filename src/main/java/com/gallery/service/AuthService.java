@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.gallery.dto.UserProfileResponse;
+import com.gallery.service.EmailService;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,8 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private EmailService emailService;
 
     @Transactional
     public void registerUser(SignUpRequest signUpRequest) {
@@ -55,7 +58,9 @@ public class AuthService {
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setRoles(Collections.singleton(userRole));
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        // send welcome email
+        emailService.sendRegistrationEmail(savedUser.getEmail(), savedUser.getUsername());
     }
 
     @Transactional

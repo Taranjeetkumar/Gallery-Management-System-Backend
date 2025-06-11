@@ -6,6 +6,10 @@ import com.gallery.service.ArtistService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.gallery.model.User;
+import com.gallery.service.ArtistService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +50,13 @@ public class ArtistController {
     @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER')")
     public void deleteArtist(@PathVariable Long id) {
         artistService.deleteArtist(id);
+    }
+
+     @GetMapping("/creator")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','GALLERY_MANAGER','ARTIST')")
+    public List<ArtistResponse> getArtistsByCreator() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        return artistService.getArtistsByCreatorUsername(username);
     }
 }

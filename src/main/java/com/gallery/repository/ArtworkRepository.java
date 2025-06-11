@@ -12,4 +12,6 @@ public interface ArtworkRepository extends JpaRepository<Artwork, Long> {
     List<Artwork> findByGalleryId(Long galleryId);
 
     List<Artwork> findByArtistIdAndGalleryId(Long artistId, Long galleryId);
+
+    long countByArtistId(Long artistId);
 }

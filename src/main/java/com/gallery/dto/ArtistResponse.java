@@ -18,4 +18,22 @@ public class ArtistResponse {
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+     private long artworkCount;
+    private String createdByUsername;
+
+    public long getArtworkCount() {
+        return artworkCount;
+    }
+
+    public void setArtworkCount(long artworkCount) {
+        this.artworkCount = artworkCount;
+    }
+
+     public String getCreatedByUsername() {
+        return createdByUsername;
+    }
+
+    public void setCreatedByUsername(String createdByUsername) {
+        this.createdByUsername = createdByUsername;
+    }
 }

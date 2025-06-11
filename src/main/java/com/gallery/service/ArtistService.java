@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.gallery.dto.SocialMediaDTO;
 import com.gallery.model.SocialMedia;
+import com.gallery.repository.ArtworkRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +30,9 @@ public class ArtistService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ArtworkRepository artworkRepository;
 
     public List<ArtistResponse> getAllArtists() {
         return userRepository.findByRolesName(Role.ERole.ROLE_ARTIST).stream()
@@ -69,6 +75,12 @@ public class ArtistService {
         sm.setTwitter(request.getSocialMedia().getTwitter());
         artist.setSocialMedia(sm);
 
+        // set creator
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User creator = userRepository.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Creator not found: " + auth.getName()));
+        artist.setCreatedBy(creator);
+
         User saved = userRepository.save(artist);
         return mapToResponse(saved);
     }
@@ -85,6 +97,17 @@ public class ArtistService {
         User updated = userRepository.save(artist);
         return mapToResponse(updated);
     }
+
+     public List<ArtistResponse> getArtistsByCreatorUsername(String username) {
+        return userRepository.findByCreatedByUsernameAndRolesName(username, Role.ERole.ROLE_ARTIST).stream()
+                .map(user -> {
+                    ArtistResponse resp = mapToResponse(user);
+                    resp.setArtworkCount(artworkRepository.countByArtistId(user.getId()));
+                    return resp;
+                })
+                .collect(Collectors.toList());
+    }
+
 
     public void deleteArtist(Long id) {
         User artist = userRepository.findById(id)
@@ -106,6 +129,9 @@ public class ArtistService {
         response.setIsActive(user.getIsActive());
         response.setCreatedAt(user.getCreatedAt());
         response.setUpdatedAt(user.getUpdatedAt());
+        if (user.getCreatedBy() != null) {
+            response.setCreatedByUsername(user.getCreatedBy().getUsername());
+        }
         return response;
     }
 }
