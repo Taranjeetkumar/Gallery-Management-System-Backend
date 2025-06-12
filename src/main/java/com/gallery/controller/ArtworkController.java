@@ -40,7 +40,7 @@ public class ArtworkController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','ARTIST')")
+    @PreAuthorize("hasAnyRole('ADMIN','GALLERY_MANAGER','ARTIST','USER')")
     public ArtworkResponse updateArtwork(@PathVariable Long id, @Valid @RequestBody ArtworkRequest request) {
         return artworkService.updateArtwork(id, request);
     }

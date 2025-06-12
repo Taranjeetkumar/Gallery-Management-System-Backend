@@ -135,6 +135,8 @@ public class GalleryService {
             saved.getPhone(),
             saved.getEmail(),
             saved.getWebsite(),
+             saved.getCreatedAt(),
+            saved.getUpdatedAt(),
             request.getOpeningHours(),
             request.getSocialMedia()
         );
@@ -189,6 +191,8 @@ return new GalleryResponse(
             updated.getPhone(),
             updated.getEmail(),
             updated.getWebsite(),
+               updated.getCreatedAt(),
+            updated.getUpdatedAt(),
             request.getOpeningHours(),
             request.getSocialMedia()
         );
@@ -224,6 +228,8 @@ return new GalleryResponse(
             gallery.getPhone(),
             gallery.getEmail(),
             gallery.getWebsite(),
+            gallery.getCreatedAt(),
+            gallery.getUpdatedAt(),
             mapOpeningHours(gallery.getOpeningHours()),
             mapSocialMedia(gallery.getSocialMedia())
         );

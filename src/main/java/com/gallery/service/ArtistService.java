@@ -132,6 +132,18 @@ public class ArtistService {
         if (user.getCreatedBy() != null) {
             response.setCreatedByUsername(user.getCreatedBy().getUsername());
         }
+        response.setSocialMedia(mapSocialMedia(user.getSocialMedia()));
+
         return response;
+    }
+
+      private SocialMediaDTO mapSocialMedia(SocialMedia sm) {
+        if (sm == null) return null;
+        SocialMediaDTO dto = new SocialMediaDTO();
+        dto.setInstagram(sm.getInstagram()); 
+        dto.setFacebook(sm.getFacebook());
+        dto.setTwitter(sm.getTwitter()); 
+        dto.setWebsite(sm.getWebsite()); 
+        return dto;
     }
 }

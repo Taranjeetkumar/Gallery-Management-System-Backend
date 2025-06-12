@@ -3,6 +3,7 @@ package com.gallery.dto;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Set;
+import com.gallery.dto.SocialMediaDTO;
 
 @Data
 public class ArtistResponse {
@@ -20,6 +21,8 @@ public class ArtistResponse {
     private LocalDateTime updatedAt;
      private long artworkCount;
     private String createdByUsername;
+    private SocialMediaDTO socialMedia;
+
 
     public long getArtworkCount() {
         return artworkCount;

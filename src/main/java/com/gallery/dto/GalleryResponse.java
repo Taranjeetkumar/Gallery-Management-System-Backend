@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import com.gallery.dto.OpeningHoursDTO;
 import com.gallery.dto.SocialMediaDTO;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,8 @@ public class GalleryResponse {
     private String phone;
     private String email;
     private String website;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private OpeningHoursDTO openingHours;
     private SocialMediaDTO socialMedia;
 }

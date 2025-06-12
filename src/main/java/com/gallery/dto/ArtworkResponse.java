@@ -22,4 +22,13 @@ public class ArtworkResponse {
     private Boolean isFeatured;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String artistName;
+
+    public String getCreatedByArtistName() {
+        return artistName;
+    }
+
+    public void setCreatedByArtistName(String createdByArtistName) {
+        this.artistName = createdByArtistName;
+    }
 }

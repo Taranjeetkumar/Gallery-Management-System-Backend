@@ -135,6 +135,10 @@ public class ArtworkService {
     if (artwork.getArtist() != null) {
         response.setArtistId(artwork.getArtist().getId());
     }
+
+     if (artwork.getArtist() != null) {
+            response.setCreatedByArtistName(artwork.getArtist().getFullname());
+        }
         response.setImageUrl(artwork.getImageUrl());
         response.setThumbnailUrl(artwork.getThumbnailUrl());
         response.setMedium(artwork.getMedium());
